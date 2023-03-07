@@ -41,7 +41,7 @@ def main():
     connect_wlan(SSID, PASSWORD)
 
     import senko
-    OTA = senko.Senko(user="jmodrako", repo="astroclouds", branch="main", working_dir="app", files=["main.py"])
+    OTA = senko.Senko(user="jmodrako", repo="astroclouds", branch="main", working_dir="app", files=["boot.py", "main.py"])
     if OTA.fetch():
         print("A newer version is available!")
     else:
@@ -54,4 +54,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 

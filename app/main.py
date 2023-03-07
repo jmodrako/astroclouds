@@ -7,26 +7,37 @@ import urequests as requests
 import socket
 import re
 from machine import I2C, Pin, Timer
+import random
 
 import mlx90614
 
-sda=machine.Pin(0)
-scl=machine.Pin(1)
-i2c = I2C(id=0, sda = sda, scl = scl, freq=100000)
-devices = i2c.scan()
+LOCAL_MODE = False
 
-if len(devices) == 0:
-  print("No i2c device !")
-else:
-  print('i2c devices found:',len(devices))
+CLOUDS_CLEAR_THRESHOLD = 4
+CLOUDS_CLOUDY_THRESHOLD = 1
 
-  for device in devices:
-    print("Decimal address: ",device," | Hexa address: ",hex(device))
+LOOP_SLEEP_SECONDS = 1
+
+sensor = None
+
+if not LOCAL_MODE:
+    sda=machine.Pin(0)
+    scl=machine.Pin(1)
+    i2c = I2C(id=0, sda = sda, scl = scl, freq=100000)
+    devices = i2c.scan()
+    
+    #I2C_MLX90614     = 0x5a
+    sensor = mlx90614.MLX90614(i2c)
+
+    if len(devices) == 0:
+      print("No i2c device !")
+    else:
+      print('i2c devices found:',len(devices))
+
+      for device in devices:
+        print("Decimal address: ",device," | Hexa address: ",hex(device))
 
 time.sleep_ms(500)
-
-#I2C_MLX90614     = 0x5a
-sensor = mlx90614.MLX90614(i2c)
 
 # Define blinking function for onboard LED to indicate error codes    
 def blink_onboard_led(num_blinks):
@@ -40,23 +51,44 @@ def blink_onboard_led(num_blinks):
 blink_onboard_led(3)
 
 import pinrelay
-outRelay = pinrelay.PinRelay(2)
-
-CLOUDS_THRESHOLD = 30
+noCloudsSignal = pinrelay.PinRelay(2)
+ackLed = pinrelay.PinRelay(3)
+noCloudsLed = pinrelay.PinRelay(4)
+cloudsLed = pinrelay.PinRelay(5)
 
 while True:
-    amb = sensor.read_ambient_temp()
+    ackLed.toggle()
+    blink_onboard_led(1)
+    
+    ambient_temp = random.randint(-20, 45) if LOCAL_MODE else sensor.read_ambient_temp()
     time.sleep_ms(100)
-    obj = sensor.read_object_temp()
+    
+    sky_temp = random.randint(-40, 45) if LOCAL_MODE else sensor.read_object_temp()
     time.sleep_ms(100)
 
-    diff = obj - amb
+    diff = abs(sky_temp - ambient_temp)
+    print(str(diff))
     
-    time.sleep(1)
+    try:
+        r = requests.get(url='http://192.168.2.214:8855/?ambient_temp=' + str(ambient_temp) + "&sky_temp=" + str(sky_temp) + "&diff=" + str(diff))
+        r.close()
+    except:
+        print("Can't send data to server...")
     
-    if abs(obj) > CLOUDS_THRESHOLD:
-        outRelay.on()
+    if diff > CLOUDS_CLEAR_THRESHOLD:
+        # clear
+        noCloudsSignal.on()
+        noCloudsLed.on()
+        cloudsLed.off()
+    elif diff > CLOUDS_CLOUDY_THRESHOLD:
+        # cloudy
+        noCloudsSignal.off()
+        noCloudsLed.off()
+        cloudsLed.on()
     else:
-        outRelay.off()
+        # full clouds
+        noCloudsSignal.off()
+        noCloudsLed.off()
+        cloudsLed.on()
     
-    blink_onboard_led(1)
+    time.sleep(LOOP_SLEEP_SECONDS)
