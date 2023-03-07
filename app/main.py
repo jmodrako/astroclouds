@@ -4,14 +4,30 @@ import rp2
 import network
 import ubinascii
 import urequests as requests
-import time
 import socket
 import re
 from machine import I2C, Pin
+import mlx90614
 
-"""Your main code goes here!"""
+sda=machine.Pin(0)
+scl=machine.Pin(1)
 
-print("Accept the pampering! ~ Senko")
+i2c = I2C(id=0, sda = sda, scl = scl, freq=100000)
+
+devices = i2c.scan()
+
+if len(devices) == 0:
+  print("No i2c device !")
+else:
+  print('i2c devices found:',len(devices))
+
+  for device in devices:
+    print("Decimal address: ",device," | Hexa address: ",hex(device))
+
+time.sleep_ms(500)
+
+#I2C_MLX90614     = 0x5a
+sensor = mlx90614.MLX90614(i2c)
 
 # Define blinking function for onboard LED to indicate error codes    
 def blink_onboard_led(num_blinks):
@@ -22,5 +38,20 @@ def blink_onboard_led(num_blinks):
         led.off()
         time.sleep(.2)
 
-blink_onboard_led(10)
+blink_onboard_led(3)
 
+import pinrelay
+pinn = pinrelay.PinRelay(2)
+
+CLOUDS_THRESHOLD = 30
+
+while True:
+    amb = sensor.read_ambient_temp()
+    time.sleep_ms(200)
+    obj = sensor.read_object_temp()
+    time.sleep_ms(200)
+
+    if obj > CLOUDS_THRESHOLD:
+        pinn.on()
+    else:
+        pinn.off()
