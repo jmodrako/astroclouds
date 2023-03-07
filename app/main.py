@@ -42,7 +42,7 @@ blink_onboard_led(3)
 import pinrelay
 outRelay = pinrelay.PinRelay(2)
 
-CLOUDS_THRESHOLD = 1
+CLOUDS_THRESHOLD = 5
 
 def program(t):
     amb = sensor.read_ambient_temp()
