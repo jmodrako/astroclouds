@@ -6,14 +6,13 @@ import ubinascii
 import urequests as requests
 import socket
 import re
-from machine import I2C, Pin
+from machine import I2C, Pin, Timer
+
 import mlx90614
 
 sda=machine.Pin(0)
 scl=machine.Pin(1)
-
 i2c = I2C(id=0, sda = sda, scl = scl, freq=100000)
-
 devices = i2c.scan()
 
 if len(devices) == 0:
@@ -41,20 +40,24 @@ def blink_onboard_led(num_blinks):
 blink_onboard_led(3)
 
 import pinrelay
-pinn = pinrelay.PinRelay(2)
+outRelay = pinrelay.PinRelay(2)
 
-CLOUDS_THRESHOLD = 30
+CLOUDS_THRESHOLD = 1
 
-while True:
+def program(t):
     amb = sensor.read_ambient_temp()
-    time.sleep_ms(200)
+    time.sleep_ms(100)
     obj = sensor.read_object_temp()
-    time.sleep_ms(200)
+    time.sleep_ms(100)
 
-    if obj > CLOUDS_THRESHOLD:
-        pinn.on()
+    diff = obj - amb
+    
+    if abs(diff) > CLOUDS_THRESHOLD:
+        outRelay.on()
     else:
-        pinn.off()
+        outRelay.off()
+    
+    blink_onboard_led(1)
 
-    time.sleep(1)
-    blink_onboard_led(5)
+program_timer = Timer(mode=Timer.PERIODIC, period=1000, callback=program)
+
