@@ -44,7 +44,7 @@ outRelay = pinrelay.PinRelay(2)
 
 CLOUDS_THRESHOLD = 30
 
-def program(t):
+while True:
     amb = sensor.read_ambient_temp()
     time.sleep_ms(100)
     obj = sensor.read_object_temp()
@@ -52,12 +52,11 @@ def program(t):
 
     diff = obj - amb
     
+    time.sleep(1)
+    
     if abs(obj) > CLOUDS_THRESHOLD:
         outRelay.on()
     else:
         outRelay.off()
     
     blink_onboard_led(1)
-
-program_timer = Timer(mode=Timer.PERIODIC, period=1000, callback=program)
-
