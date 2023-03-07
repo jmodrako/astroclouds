@@ -55,3 +55,6 @@ while True:
         pinn.on()
     else:
         pinn.off()
+
+    time.sleep(1)
+    blink_onboard_led(5)
