@@ -62,9 +62,9 @@ def main():
         blink_onboard_led(3, ackLed, 500)
         print("Up to date!")
 
-    #if OTA.update():
-    #   print("Updated to the latest version! Rebooting...")
-    #  machine.reset()
+    if OTA.update():
+        print("Updated to the latest version! Rebooting...")
+        machine.reset()
 
 if __name__ == "__main__":
     main()
