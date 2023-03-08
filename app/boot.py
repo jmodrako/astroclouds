@@ -52,7 +52,7 @@ def main():
     connect_wlan(SSID, PASSWORD)
 
     import senko
-    OTA = senko.Senko(user="jmodrako", repo="astroclouds", branch="test", gh_token=secrets.gh_token)
+    OTA = senko.Senko(user="jmodrako", repo="astroclouds", branch="main", gh_token=secrets.gh_token)
     if OTA.update():
         blink_onboard_led(5, ackLed, 25)
         blink_onboard_led(5, ackLed, 100)
