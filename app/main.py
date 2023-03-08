@@ -10,7 +10,7 @@ from machine import I2C, Pin, Timer, WDT
 
 import mlx90614
 
-VERSION = 1.2
+VERSION = 1.3
 
 LOCAL_MODE = False
 WITH_HTTP_LOGGING = False
@@ -18,7 +18,7 @@ WITH_HTTP_LOGGING = False
 CLOUDS_CLEAR_THRESHOLD = 4
 CLOUDS_CLOUDY_THRESHOLD = 1
 
-LOOP_SLEEP_SECONDS = 5
+LOOP_SLEEP_SECONDS = 2
 
 sensor = None
 led = machine.Pin('LED', machine.Pin.OUT)
