@@ -6,11 +6,11 @@ import ubinascii
 import urequests as requests
 import socket
 import re
-from machine import I2C, Pin, Timer
+from machine import I2C, Pin, Timer, WDT
 
 import mlx90614
 
-VERSION = 1.1
+VERSION = 1.2
 
 LOCAL_MODE = False
 WITH_HTTP_LOGGING = True
@@ -21,7 +21,6 @@ CLOUDS_CLOUDY_THRESHOLD = 1
 LOOP_SLEEP_SECONDS = 5
 
 sensor = None
-
 led = machine.Pin('LED', machine.Pin.OUT)
 
 if not LOCAL_MODE:
@@ -68,6 +67,8 @@ cloudsLed = pinrelay.PinRelay(5)
 blink_onboard_led(6, led, blink_ms=75)
 time.sleep(2)
 
+
+wdt = WDT(timeout=7000)
 while True:
     blink_onboard_led(1, ackLed, blink_ms=50)
     blink_onboard_led(1, led, blink_ms=50)
@@ -100,4 +101,6 @@ while True:
         noCloudsLed.off()
         cloudsLed.on()
     
+    wdt.feed()
+
     time.sleep(LOOP_SLEEP_SECONDS)
