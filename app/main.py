@@ -20,6 +20,8 @@ LOOP_SLEEP_SECONDS = 5
 
 sensor = None
 
+led = machine.Pin('LED', machine.Pin.OUT)
+
 if not LOCAL_MODE:
     sda=machine.Pin(0)
     scl=machine.Pin(1)
@@ -47,9 +49,6 @@ def blink_onboard_led(num_blinks, led_pin, blink_ms = 200):
         led_pin.off()
         time.sleep_ms(blink_ms)
 
-led = machine.Pin('LED', machine.Pin.OUT)
-blink_onboard_led(3, led)
-
 def logHttp(ambient_temp, sky_temp, diff):
     try:
         # r = requests.get(url='http://192.168.2.214:8855/?ambient_temp=' + str(ambient_temp) + "&sky_temp=" + str(sky_temp) + "&diff=" + str(diff))
@@ -63,6 +62,9 @@ noCloudsSignal = pinrelay.PinRelay(2)
 ackLed = pinrelay.PinRelay(3)
 noCloudsLed = pinrelay.PinRelay(4)
 cloudsLed = pinrelay.PinRelay(5)
+
+blink_onboard_led(6, led, blink_ms=75)
+time.sleep(2)
 
 while True:
     blink_onboard_led(1, ackLed, blink_ms=50)
