@@ -18,5 +18,5 @@ def blink_onboard_led(num_blinks):
         led.off()
         time.sleep(.2)
 
-blink_onboard_led(3)
+blink_onboard_led(10)
 
