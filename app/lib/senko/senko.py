@@ -36,7 +36,7 @@ class Senko:
         self.headers = headers
         self.files = files + ['lib/senko/senko.py']
         
-        print('Detected changes in following files: {}'.format(self.files))
+        print('Files to check for update: {}'.format(self.files))
 
     def _check_hash(self, x, y):
         x_hash = uhashlib.sha1(x.encode())
