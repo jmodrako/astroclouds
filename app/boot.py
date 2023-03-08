@@ -1,6 +1,10 @@
 import gc
 import machine
 import network
+import time
+from machine import Pin
+
+ackLed = machine.Pin('LED', machine.Pin.OUT)
 
 def connect_wlan(ssid, password):
     """Connects build-in WLAN interface to the network.
@@ -24,6 +28,13 @@ def connect_wlan(ssid, password):
 
     return True
 
+# Define blinking function for onboard LED to indicate error codes
+def blink_onboard_led(num_blinks, led_pin, blink_ms = 200):
+    for i in range(num_blinks):
+        led_pin.on()
+        time.sleep_ms(blink_ms)
+        led_pin.off()
+        time.sleep_ms(blink_ms)
 
 def main():
     """Main function. Runs after board boot, before main.py
@@ -41,18 +52,18 @@ def main():
     connect_wlan(SSID, PASSWORD)
 
     import senko
-    OTA = senko.Senko(user="jmodrako", repo="astroclouds", branch="main", working_dir="app", files=["boot.py", "main.py"])
+    OTA = senko.Senko(user="jmodrako", repo="astroclouds", branch="test", files=["boot.py", "main.py"])
     if OTA.fetch():
+        blink_onboard_led(5, ackLed, 10)
+        blink_onboard_led(5, ackLed, 76)
         print("A newer version is available!")
     else:
+        blink_onboard_led(10, ackLed, 500)
         print("Up to date!")
 
-    if OTA.update():
-        print("Updated to the latest version! Rebooting...")
-        machine.reset()
-
+    #if OTA.update():
+    #   print("Updated to the latest version! Rebooting...")
+    #  machine.reset()
 
 if __name__ == "__main__":
     main()
-
-
