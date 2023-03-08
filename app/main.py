@@ -10,7 +10,7 @@ from machine import I2C, Pin, Timer
 
 import mlx90614
 
-VERSION = 1
+VERSION = 1.1
 
 LOCAL_MODE = False
 WITH_HTTP_LOGGING = True
