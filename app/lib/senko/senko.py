@@ -35,6 +35,8 @@ class Senko:
         self.url = url if url is not None else "{}/{}/{}".format(self.base_url, latestSha, working_dir)
         self.headers = headers
         self.files = files + ['lib/senko/senko.py']
+        
+        print('Detected changes in following files: {}'.format(self.files))
 
     def _check_hash(self, x, y):
         x_hash = uhashlib.sha1(x.encode())
