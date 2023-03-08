@@ -10,6 +10,8 @@ from machine import I2C, Pin, Timer
 
 import mlx90614
 
+VERSION = 1
+
 LOCAL_MODE = False
 WITH_HTTP_LOGGING = True
 
@@ -52,7 +54,7 @@ def blink_onboard_led(num_blinks, led_pin, blink_ms = 200):
 def logHttp(ambient_temp, sky_temp, diff):
     try:
         # r = requests.get(url='http://192.168.2.214:8855/?ambient_temp=' + str(ambient_temp) + "&sky_temp=" + str(sky_temp) + "&diff=" + str(diff))
-        r = requests.get(url='http://astrokanciapa.pl:8321/astroclouds?ambient_temp=' + str(ambient_temp) + "&sky_temp=" + str(sky_temp) + "&diff=" + str(diff))
+        r = requests.get(url='http://astrokanciapa.pl:8321/astroclouds?version=' + str(VERSION) + '&ambient_temp=' + str(ambient_temp) + "&sky_temp=" + str(sky_temp) + "&diff=" + str(diff))
         r.close()
     except:
         print("Can't send data to server...")
