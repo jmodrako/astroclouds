@@ -59,7 +59,10 @@ def main():
         blink_onboard_led(5, ackLed, 100)
         print("A newer version is available!")
     else:
-        blink_onboard_led(3, ackLed, 500)
+        blink_onboard_led(5, ackLed, 25)
+        blink_onboard_led(5, ackLed, 100)
+        blink_onboard_led(5, ackLed, 25)
+        blink_onboard_led(5, ackLed, 100)
         print("Up to date!")
 
     if OTA.update():
