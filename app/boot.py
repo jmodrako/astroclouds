@@ -7,7 +7,7 @@ from machine import Pin
 ackLed = machine.Pin('LED', machine.Pin.OUT)
 
 def connect_wlan(ssid, password):
-    """Connects build-in Wlan interface to the network.
+    """Connects build-in WLAN interface to the network.
     Args:
         ssid: Service name of Wi-Fi network.
         password: Password for that Wi-Fi network.
@@ -52,13 +52,14 @@ def main():
     connect_wlan(SSID, PASSWORD)
 
     import senko
-    OTA = senko.Senko(user="jmodrako", repo="astroclouds", branch="test", files=["boot.py", "main.py"])
+    OTA = senko.Senko(user="jmodrako", repo="astroclouds", branch="test", gh_token=secrets.gh_token)
+    
     if OTA.fetch():
-        blink_onboard_led(5, ackLed, 10)
-        blink_onboard_led(5, ackLed, 76)
+        blink_onboard_led(5, ackLed, 25)
+        blink_onboard_led(5, ackLed, 100)
         print("A newer version is available!")
     else:
-        blink_onboard_led(10, ackLed, 500)
+        blink_onboard_led(3, ackLed, 500)
         print("Up to date!")
 
     #if OTA.update():
