@@ -7,7 +7,7 @@ from machine import Pin
 ackLed = machine.Pin('LED', machine.Pin.OUT)
 
 def connect_wlan(ssid, password):
-    """Connects build-in WLAN interface to the network.
+    """Connects build-in Wlan interface to the network.
     Args:
         ssid: Service name of Wi-Fi network.
         password: Password for that Wi-Fi network.
