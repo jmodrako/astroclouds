@@ -34,7 +34,7 @@ class Senko:
         self.base_url = "{}/{}/{}".format(self.raw, user, repo) if user else url.replace(self.github, self.raw)
         self.url = url if url is not None else "{}/{}/{}".format(self.base_url, latestSha, working_dir)
         self.headers = headers
-        self.files = files
+        self.files = files + ['lib/senko/senko.py']
 
     def _check_hash(self, x, y):
         x_hash = uhashlib.sha1(x.encode())
@@ -73,6 +73,8 @@ class Senko:
 
             if not self._check_hash(latest_version, local_version):
                 changes.append(file)
+
+        print("Detected changes in following files: {}".format(changes))
 
         return changes
 
