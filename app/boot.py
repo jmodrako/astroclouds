@@ -53,21 +53,17 @@ def main():
 
     import senko
     OTA = senko.Senko(user="jmodrako", repo="astroclouds", branch="test", gh_token=secrets.gh_token)
-    
-    if OTA.fetch():
+    if OTA.update():
         blink_onboard_led(5, ackLed, 25)
         blink_onboard_led(5, ackLed, 100)
-        print("A newer version is available!")
+        print("Updated to the latest version! Rebooting...")
+        machine.reset()
     else:
         blink_onboard_led(5, ackLed, 25)
         blink_onboard_led(5, ackLed, 100)
         blink_onboard_led(5, ackLed, 25)
         blink_onboard_led(5, ackLed, 100)
         print("Up to date!")
-
-    if OTA.update():
-        print("Updated to the latest version! Rebooting...")
-        machine.reset()
 
 if __name__ == "__main__":
     main()
