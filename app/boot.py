@@ -4,6 +4,8 @@ import network
 import time
 from machine import Pin
 
+WITH_VERSION_CHECK = False
+
 ackLed = machine.Pin('LED', machine.Pin.OUT)
 
 def connect_wlan(ssid, password):
@@ -50,6 +52,9 @@ def main():
     PASSWORD = secrets.password
 
     connect_wlan(SSID, PASSWORD)
+
+    if not WITH_VERSION_CHECK:
+        return
 
     import senko
     OTA = senko.Senko(user="jmodrako", repo="astroclouds", branch="main", gh_token=secrets.gh_token)

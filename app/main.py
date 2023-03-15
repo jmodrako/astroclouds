@@ -13,10 +13,9 @@ import mlx90614
 VERSION = 1.3
 
 LOCAL_MODE = False
-WITH_HTTP_LOGGING = False
+WITH_HTTP_LOGGING = True
 
-CLOUDS_CLEAR_THRESHOLD = 4
-CLOUDS_CLOUDY_THRESHOLD = 1
+CLOUDS_CLEAR_THRESHOLD = -20
 
 LOOP_SLEEP_SECONDS = 2
 
@@ -73,28 +72,23 @@ while True:
     blink_onboard_led(1, ackLed, blink_ms=50)
     blink_onboard_led(1, led, blink_ms=50)
     
-    ambient_temp = random.randint(-20, 45) if LOCAL_MODE else sensor.read_ambient_temp()
+    ambient_temp = random.randint(-20, 45) if LOCAL_MODE else round(sensor.read_ambient_temp(), 2)
     time.sleep_ms(100)
     
-    sky_temp = random.randint(-40, 45) if LOCAL_MODE else sensor.read_object_temp()
+    sky_temp = random.randint(-40, 45) if LOCAL_MODE else round(sensor.read_object_temp(), 2)
     time.sleep_ms(100)
 
-    diff = abs(sky_temp - ambient_temp)
-    print(str(diff))
+    diff = sky_temp - ambient_temp
+    print("Sky: {}, Ambient: {}, Diff:{}".format(sky_temp, ambient_temp, diff))
     
     if WITH_HTTP_LOGGING:
         logHttp(ambient_temp, sky_temp, diff)
     
-    if diff > CLOUDS_CLEAR_THRESHOLD:
+    if diff < CLOUDS_CLEAR_THRESHOLD:
         # clear
         noCloudsSignal.on()
         noCloudsLed.on()
         cloudsLed.off()
-    elif diff > CLOUDS_CLOUDY_THRESHOLD:
-        # cloudy
-        noCloudsSignal.off()
-        noCloudsLed.off()
-        cloudsLed.on()
     else:
         # full clouds
         noCloudsSignal.off()
