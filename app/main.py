@@ -10,7 +10,7 @@ from machine import I2C, Pin, Timer, WDT
 
 import mlx90614
 
-VERSION = 1.3
+VERSION = 1.31
 
 LOCAL_MODE = False
 WITH_HTTP_LOGGING = True
