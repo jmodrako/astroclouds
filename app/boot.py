@@ -4,7 +4,7 @@ import network
 import time
 from machine import Pin
 
-WITH_VERSION_CHECK = False
+WITH_VERSION_CHECK = True
 
 ackLed = machine.Pin('LED', machine.Pin.OUT)
 
