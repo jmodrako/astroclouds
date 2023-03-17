@@ -58,14 +58,12 @@ def logHttp(ambient_temp, sky_temp, diff):
         print("Can't send data to server...")
 
 import pinrelay
-noCloudsSignal = pinrelay.PinRelay(2)
-ackLed = pinrelay.PinRelay(3)
-noCloudsLed = pinrelay.PinRelay(4)
-cloudsLed = pinrelay.PinRelay(5)
+ackLed = pinrelay.PinRelay(2)
+cloudsSignal = pinrelay.PinRelay(4)
+cloudsLed = pinrelay.PinRelay(3)
 
 blink_onboard_led(6, led, blink_ms=75)
 time.sleep(2)
-
 
 wdt = WDT(timeout=7000)
 while True:
@@ -86,15 +84,14 @@ while True:
     
     if diff < CLOUDS_CLEAR_THRESHOLD:
         # clear
-        noCloudsSignal.on()
-        noCloudsLed.on()
+        cloudsSignal.off()
         cloudsLed.off()
     else:
         # full clouds
-        noCloudsSignal.off()
-        noCloudsLed.off()
+        cloudsSignal.on()
         cloudsLed.on()
     
     wdt.feed()
 
     time.sleep(LOOP_SLEEP_SECONDS)
+
