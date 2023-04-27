@@ -10,7 +10,7 @@ from machine import I2C, Pin, Timer, WDT
 import pinrelay
 import mlx90614
 
-VERSION = 1.33
+VERSION = 1.34
 
 LOCAL_MODE = False
 WITH_HTTP_LOGGING = True
@@ -18,7 +18,7 @@ LOOP_SLEEP_SECONDS = 2
 
 FIRST_SKY_READING_DELAY_S = 5
 CLOSING_ROOF_INTERVAL_S = 10
-CLEAR_SKY_DIFF_C = 15
+CLEAR_SKY_DIFF_C = 25
 LOG_HTTP_EACH = 15
 logHttpEach = 0
 
