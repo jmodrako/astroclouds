@@ -10,7 +10,7 @@ from machine import I2C, Pin, Timer, WDT
 import pinrelay
 import mlx90614
 
-VERSION = 1.32
+VERSION = 1.33
 
 LOCAL_MODE = False
 WITH_HTTP_LOGGING = True
